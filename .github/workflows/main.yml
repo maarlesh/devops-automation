@@ -1,6 +1,7 @@
 name: GitLeaks Scan
 
 on:
+  workflow_call:
   push:
     branches:
       - main
