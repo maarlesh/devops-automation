@@ -1,4 +1,4 @@
-name: GitLeaks Scan
+name: gitleaks-sast-sca-scan
 
 on:
   workflow_call:
@@ -11,7 +11,7 @@ on:
  
 
 jobs:
-  gitleaks:
+  gitleaks-sast-sca-scanning:
     runs-on: ubuntu-latest
 
  
@@ -42,4 +42,28 @@ jobs:
        unzip -qq dependency-check-8.4.0-release.zip   
 
     - name: Run OWASP Dependency-Check
-      run: ./dependency-check/bin/dependency-check.sh --scan ./ --format HTML --project "Dependencychecker_DevOpsTest" --out ./report   
+      run: ./dependency-check/bin/dependency-check.sh --scan ./ --format HTML --project "Dependencychecker_DevOpsTest" --out ./report
+    - name: Upload OWASP Dependency-Check Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: dependency-check-report
+        path: ./report
+
+    - name: Download FindSecBugs   
+      run: |
+       wget -q -O findsecbugs-cli-1.12.0.zip https://github.com/find-sec-bugs/find-sec-bugs/releases/download/version-1.12.0/findsecbugs-cli-1.12.0.zip 
+       unzip -qq findsecbugs-cli-1.12.0.zip
+       chmod 755 findsecbugs.sh 
+       chmod +x findsecbugs.sh
+       ls -l
+    
+
+    - name: Run FindSecBugs
+      run: ./findsecbugs.sh -progress -output findsecbugs-results.html -html target/*.jar
+
+    - name: Upload FindSecBugs Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: findsecbugs-report
+        path: findsecbugs-results.html
+
