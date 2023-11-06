@@ -43,9 +43,3 @@ jobs:
 
     - name: Run OWASP Dependency-Check
       run: ./dependency-check/bin/dependency-check.sh --scan ./ --format HTML --project "Dependencychecker_DevOpsTest" --out ./report   
-
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: 78066e93e9fa85a2dd169d5d7cc41dc321277aee
